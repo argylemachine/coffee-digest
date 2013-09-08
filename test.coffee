@@ -53,7 +53,8 @@ async.map directories, ( directory, cb ) ->
 				# also graph the max and min.
 				sum = 0
 				sum += depth for depth in depths
-				_depths = { "average": Math.round( sum / depths.length ), "max": Math.max.apply( null, depths ) }
+				average_depth	= Math.round( sum / depths.length )
+				max_depth	= Math.max.apply( null, depths )
 
 				# Grab the number of lines both coffeescript and js.
 				num_cs_lines = data.split("\n").length
@@ -63,7 +64,13 @@ async.map directories, ( directory, cb ) ->
 				explode_ratio = num_js_lines / num_cs_lines
 
 				# Define the object we'll contiue to abuse until we return it.
-				_o = { "file": file, "ops": type_counter, "depths": _depths, "num_cs_lines": num_cs_lines, "num_js_lines": num_js_lines, "explode_ratio": explode_ratio }
+				_o = {	"file": file, \
+					"ops": type_counter,
+					"max_depth": max_depth,
+					"average_depth": average_depth,
+					"num_cs_lines": num_cs_lines,
+					"num_js_lines": num_js_lines,
+					"explode_ratio": explode_ratio }
 
 				# At this point also compute each operation per line.
 				for op, c of type_counter
