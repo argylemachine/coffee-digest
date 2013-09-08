@@ -53,10 +53,24 @@ async.map directories, ( directory, cb ) ->
 				# also graph the max and min.
 				sum = 0
 				sum += depth for depth in depths
-
 				_depths = { "average": Math.round( sum / depths.length ), "max": Math.max.apply( null, depths ) }
 
-				return cb null, {"file": file, "ops": type_counter, "depths": _depths }
+				# Grab the number of lines both coffeescript and js.
+				num_cs_lines = data.split("\n").length
+				num_js_lines = coffee_script.compile( data ).length
+
+				# Determine the ratio of cs to js lines.
+				explode_ratio = num_js_lines / num_cs_lines
+
+				# Define the object we'll contiue to abuse until we return it.
+				_o = { "file": file, "ops": type_counter, "depths": _depths, "num_cs_lines": num_cs_lines, "num_js_lines": num_js_lines, "explode_ratio": explode_ratio }
+
+				# At this point also compute each operation per line.
+				for op, c of type_counter
+					_o[op + "_pl"] = c / num_cs_lines
+
+				# Return the object.
+				return cb null, _o
 
 		, cb
 
@@ -64,4 +78,9 @@ async.map directories, ( directory, cb ) ->
 	if err
 		log "Fatal error: #{err}"
 		process.exit 1
-	log "I have res of #{util.inspect res[0], true, 9}"
+
+	# Just collapse the response arrays
+	_res = [ ]
+	_res.push file_detail for file_detail in detail_array for detail_array in res
+
+	log "_res is #{util.inspect _res}"
