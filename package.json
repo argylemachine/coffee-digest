@@ -1,0 +1,11 @@
+{
+	"name": "coffee-digest",
+	"description": "Visualization and introspection of coffeescript.",
+	"version": "0.0.1",
+	"dependencies": {
+		"coffee-script": "latest",
+		"async": "latest",
+		"find": "latest",
+		"logging": "latest"
+	}
+}
