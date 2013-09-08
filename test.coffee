@@ -49,8 +49,7 @@ async.map directories, ( directory, cb ) ->
 				# Scan the nodes!
 				recursive_scan coffee_script.nodes data
 
-				# Calculate the average depth of the operations.
-				# also graph the max and min.
+				# Calculate the average depth as well as the max.
 				sum = 0
 				sum += depth for depth in depths
 				average_depth	= Math.round( sum / depths.length )
@@ -58,7 +57,7 @@ async.map directories, ( directory, cb ) ->
 
 				# Grab the number of lines both coffeescript and js.
 				num_cs_lines = data.split("\n").length
-				num_js_lines = coffee_script.compile( data ).length
+				num_js_lines = coffee_script.compile( data ).split( "\n" ).length
 
 				# Determine the ratio of cs to js lines.
 				explode_ratio = num_js_lines / num_cs_lines
